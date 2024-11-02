@@ -13,11 +13,13 @@ class Booking
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $user_id = null;
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'bookings')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
 
-    #[ORM\Column]
-    private ?int $service_id = null;
+    #[ORM\ManyToOne(targetEntity: Services::class, inversedBy: 'bookings')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Services $service = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $date = null;
@@ -30,26 +32,26 @@ class Booking
         return $this->id;
     }
 
-    public function getUserId(): ?int
+    public function getUser(): ?User
     {
-        return $this->user_id;
+        return $this->user;
     }
 
-    public function setUserId(int $user_id): static
+    public function setUser(User $user): static
     {
-        $this->user_id = $user_id;
+        $this->user = $user;
 
         return $this;
     }
 
-    public function getServiceId(): ?int
+    public function getService(): ?Services
     {
-        return $this->service_id;
+        return $this->service;
     }
 
-    public function setServiceId(int $service_id): static
+    public function setService(Services $service): static
     {
-        $this->service_id = $service_id;
+        $this->service = $service;
 
         return $this;
     }

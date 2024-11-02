@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ServicesRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ServicesRepository::class)]
@@ -22,8 +24,13 @@ class Services
     #[ORM\Column(type: "decimal", precision: 10, scale: 2)]
     private ?float $price = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $categories = null;
+    #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: 'service', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Collection $bookings;
+
+    public function __construct()
+    {
+        $this->bookings = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -54,26 +61,40 @@ class Services
         return $this;
     }
 
-    public function getPrice(): ?string
+    public function getPrice(): ?float
     {
         return $this->price;
     }
 
-    public function setPrice(string $price): static
+    public function setPrice(float $price): static
     {
         $this->price = $price;
 
         return $this;
     }
 
-    public function getCategories(): ?string
+    public function getBookings(): Collection
     {
-        return $this->categories;
+        return $this->bookings;
     }
 
-    public function setCategories(string $categories): static
+    public function addBooking(Booking $booking): static
     {
-        $this->categories = $categories;
+        if (!$this->bookings->contains($booking)) {
+            $this->bookings[] = $booking;
+            $booking->setService($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBooking(Booking $booking): static
+    {
+        if ($this->bookings->removeElement($booking)) {
+            if ($booking->getService() === $this) {
+                $booking->setService(null);
+            }
+        }
 
         return $this;
     }
