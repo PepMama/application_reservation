@@ -20,15 +20,16 @@
         </a>
 
         <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-            <li><a href="#" class="nav-link px-2 link-secondary">Home</a></li>
+            <li><a href="#" class="nav-link px-2 link-secondary">Accueil</a></li>
+            <li><a href="#" class="nav-link px-2 link-secondary">Utilisateur</a></li>
             <div class="btn-group">
                 <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                    Services
+                    Services proposés
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    {% for service in services %}
+                        <li><a class="dropdown-item" href="#">{{ service.name }}</a></li>
+                    {% endfor %}
                 </ul>
             </div>
         </ul>
@@ -43,7 +44,7 @@
 </main>
 
 <!-- Footer -->
-<footer class="py-5 my-4" style="background-color: #212529; color: white;">
+<footer class="py-5 mt-4" style="background-color: #212529; color: white;">
     <p class="text-center">&copy; 2024 Company | Développé par Pépin Maëlic</p>
 </footer>
 
