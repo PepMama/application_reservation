@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ service.name }} - Détails{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h1 class="display-5">{{ service.name }}</h1>
+        <p>{{ service.description }}</p>
+        <p>Prix : {{ service.price }} €</p>
+
+        <h3 class="mt-4">Créneaux disponibles</h3>
+        <div class="accordion" id="bookingAccordion">
+            {% for day, slots in timeSlots %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading{{ day }}">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ day }}" aria-expanded="false" aria-controls="collapse{{ day }}">
+                            {{ ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'][day - 1] }}
+                        </button>
+                    </h2>
+                    <div id="collapse{{ day }}" class="accordion-collapse collapse show" aria-labelledby="heading{{ day }}" data-bs-parent="#bookingAccordion">
+                        <div class="accordion-body">
+                            {% if slots is empty %}
+                                <p>Aucun créneau disponible pour ce jour.</p>
+                            {% else %}
+                                <ul>
+                                    {% for slot in slots %}
+                                        <li class="mb-2">
+                                            {{ slot.startTime|date('H:i') }} - {{ slot.endTime|date('H:i') }}
+                                            {% if slot.isReserved %}
+                                                <span class="text-danger">(Réservé)</span>
+                                            {% else %}
+                                                <a href="#" class="btn btn-sm btn-success ms-2">Réserver</a>
+                                            {% endif %}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <a href="/}" class="btn btn-primary mt-4">Retour à la liste</a>
+    </div>
+{% endblock %}

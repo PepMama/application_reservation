@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\BookingRepository;
 use Doctrine\ORM\Mapping as ORM;
+use DateTimeImmutable;
 
 #[ORM\Entity(repositoryClass: BookingRepository::class)]
 class Booking
@@ -21,11 +22,25 @@ class Booking
     #[ORM\JoinColumn(nullable: false)]
     private ?Services $service = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $date = null;
+    #[ORM\Column(type: 'datetime')]
+    private ?\DateTime $startTime = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $time = null;
+    #[ORM\Column(type: 'datetime')]
+    private ?\DateTime $endTime = null;
+
+    #[ORM\Column(type: 'boolean')]
+    private bool $isReserved = false;
+
+    #[ORM\Column(type: 'integer')]
+    private int $dayOfWeek; // Valeur entre 1 (lundi) et 7 (dimanche)
+
+    // Constructor
+    public function __construct()
+    {
+        $this->isReserved = false; // Par défaut, le créneau est libre
+    }
+
+    // Getters et Setters...
 
     public function getId(): ?int
     {
@@ -37,7 +52,7 @@ class Booking
         return $this->user;
     }
 
-    public function setUser(User $user): static
+    public function setUser(User $user): self
     {
         $this->user = $user;
 
@@ -49,33 +64,55 @@ class Booking
         return $this->service;
     }
 
-    public function setService(Services $service): static
+    public function setService(Services $service): self
     {
         $this->service = $service;
 
         return $this;
     }
 
-    public function getDate(): ?\DateTimeImmutable
+    public function getStartTime(): ?\DateTime
     {
-        return $this->date;
+        return $this->startTime;
     }
 
-    public function setDate(\DateTimeImmutable $date): static
+    public function setStartTime(\DateTime $startTime): self
     {
-        $this->date = $date;
+        $this->startTime = $startTime;
+        return $this;
+    }
+
+    public function getEndTime(): ?\DateTime
+    {
+        return $this->endTime;
+    }
+
+    public function setEndTime(\DateTime $endTime): self
+    {
+        $this->endTime = $endTime;
+        return $this;
+    }
+
+    public function isReserved(): bool
+    {
+        return $this->isReserved;
+    }
+
+    public function setReserved(bool $isReserved): self
+    {
+        $this->isReserved = $isReserved;
 
         return $this;
     }
 
-    public function getTime(): ?\DateTimeImmutable
+    public function getDayOfWeek(): int
     {
-        return $this->time;
+        return $this->dayOfWeek;
     }
 
-    public function setTime(\DateTimeImmutable $time): static
+    public function setDayOfWeek(int $dayOfWeek): self
     {
-        $this->time = $time;
+        $this->dayOfWeek = $dayOfWeek;
 
         return $this;
     }

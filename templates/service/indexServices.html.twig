@@ -21,14 +21,14 @@
 
     <div class="container text-center ">
         <h3 id="list_services" class="display-6 text-primary">Découvrez nos services</h3>
-        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between ">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between mb-4">
             {% for services in services %}
                 <div class="card" style="width: 18rem;">
                     <div class="card-body">
                         <h5 class="card-title">{{ services.name }}</h5>
                         <p class="card-text">{{ services.description }}</p>
                         <p class="card-text">Prix : {{ services.price }}€</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                        <a href="{{ path('service_show', { id: services.id }) }}" class="btn btn-primary">Voir</a>
                     </div>
                 </div>
             {% endfor %}
