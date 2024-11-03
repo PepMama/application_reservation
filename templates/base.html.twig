@@ -22,16 +22,7 @@
         <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
             <li><a href="/" class="nav-link px-2 link-secondary">Accueil</a></li>
             <li><a href="{{ path('app_booking_cancelation') }}" class="nav-link px-2 link-secondary">Une annulation ?</a></li>
-            <div class="btn-group">
-                <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                    Services proposés
-                </button>
-                <ul class="dropdown-menu">
-                    {% for service in services %}
-                        <li><a class="dropdown-item" href="{{ path('service_show', { id: service.id }) }}">{{ service.name }}</a></li>
-                    {% endfor %}
-                </ul>
-            </div>
+            <li><a href="/" class="nav-link px-2 link-secondary">Nos services</a></li>
         </ul>
     </header>
 </div>
