@@ -1,8 +1,8 @@
 <?php
-
 namespace App\Controller;
 
 use App\Entity\Services;
+use App\Entity\Booking;
 use App\Repository\ServicesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,29 +15,29 @@ class ServicesController extends AbstractController
     public function index(ServicesRepository $repository): Response
     {
         $services = $repository->findAll();
-        return $this->render('service/indexServices.html.twig', [
+        return $this->render('service/getServices.html.twig', [
             'services' => $services,
         ]);
     }
 
     #[Route('/services/{id}', name: 'service_show')]
-    public function show(int $id, ServicesRepository $servicesRepository): Response
+    public function show(int $id, ServicesRepository $servicesRepository, EntityManagerInterface $em): Response
     {
-        $service = $servicesRepository->find($id);
+        $services = $servicesRepository->find($id);
 
-        if (!$service) {
+        if (!$services) {
             throw $this->createNotFoundException("Service non trouvé.");
         }
-        $timeSlots = $this->generateTimeSlots();
+
+        $timeSlots = $this->generateTimeSlots($services, $em);
 
         return $this->render('service/show.html.twig', [
-            'service' => $service,
-            'services' => $servicesRepository->findAll(),
+            'services' => $services,
             'timeSlots' => $timeSlots,
         ]);
     }
 
-    private function generateTimeSlots(): array
+    private function generateTimeSlots(Services $service, EntityManagerInterface $em): array
     {
         $timeSlots = [];
         $openingHour = 8;
@@ -45,19 +45,32 @@ class ServicesController extends AbstractController
 
         foreach (range(1, 5) as $dayOfWeek) {
             $dailySlots = [];
+
             for ($hour = $openingHour; $hour < $closingHour; $hour++) {
                 if ($hour === 12) {
-                    continue;
+                    continue; // Pause déjeuner
                 }
 
-                $startTime = (new \DateTimeImmutable())->setTime($hour, 0);
-                $endTime = (new \DateTimeImmutable())->setTime($hour + 1, 0);
+                $startTime = (new \DateTimeImmutable())
+                    ->modify("next Monday")
+                    ->modify("+$dayOfWeek day")
+                    ->setTime($hour, 0);
+                $endTime = $startTime->modify('+1 hour');
 
-                $dailySlots[] = [
+                $existingBooking = $em->getRepository(Booking::class)->findOneBy([
+                    'service' => $service,
                     'startTime' => $startTime,
                     'endTime' => $endTime,
-                    'isReserved' => false, // Initialement libre
-                ];
+                    'isReserved' => true,
+                ]);
+
+                if (!$existingBooking) {
+                    $dailySlots[] = [
+                        'startTime' => $startTime,
+                        'endTime' => $endTime,
+                        'isReserved' => false,
+                    ];
+                }
             }
             $timeSlots[$dayOfWeek] = $dailySlots;
         }

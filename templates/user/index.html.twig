@@ -1,20 +1,46 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello UserController!{% endblock %}
+{% block title %}Réserver un service{% endblock %}
 
-{% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+{% block content %}
+    <div class="container card mt-5 mb-5">
+        <h1 class="mb-4 mt-4">Entrez vos informations pour réserver</h1>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+        {{ form_start(form, {'attr': {'class': 'form'}}) }}
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/xampp/htdocs/application_reservation_TP1/src/Controller/UserController.php</code></li>
-        <li>Your template at <code>C:/xampp/htdocs/application_reservation_TP1/templates/user/index.html.twig</code></li>
-    </ul>
-</div>
+        <div class="mb-3">
+            {{ form_label(form.firstName, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.firstName, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.firstName) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.lastName, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.lastName, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.lastName) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.age, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.age, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.age) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.phoneNumber, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.phoneNumber, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.phoneNumber) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.email, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.email) }}
+        </div>
+
+        <button type="submit" class="btn btn-success mb-4">Réserver</button>
+{#        <a href="{{ path('service_show') }}" class="btn btn-primary">Retour à la liste</a>#}
+
+        {{ form_end(form) }}
+    </div>
 {% endblock %}
