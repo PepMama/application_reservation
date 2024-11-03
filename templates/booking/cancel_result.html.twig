@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Résultats des Réservations{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h1>Réservations pour {{ user.firstName }} {{ user.lastName }}</h1>
+
+        {% if bookings is empty %}
+            <p>Aucune réservation active trouvée pour cet utilisateur.</p>
+        {% else %}
+            <ul class="list-group">
+                {% for booking in bookings %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>
+                        Réservation du {{ booking.startTime|date('d/m/Y H:i') }} au {{ booking.endTime|date('H:i') }} - Service : {{ booking.service.name }}
+                    </span>
+                        <a href="{{ path('booking_cancel_confirm', { id: booking.id }) }}"
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Êtes-vous sûr de vouloir annuler cette réservation ?');">
+                            Annuler
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+{% endblock %}

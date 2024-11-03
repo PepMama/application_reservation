@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Annulation de Réservation{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h1>Rechercher une réservation pour annulation</h1>
+
+        <form action="{{ path('booking_cancel_results') }}" method="post">
+            <div class="mb-3">
+                <label for="firstName" class="form-label">Prénom</label>
+                <input type="text" class="form-control" id="firstName" name="firstName" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="lastName" class="form-label">Nom</label>
+                <input type="text" class="form-control" id="lastName" name="lastName" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Rechercher</button>
+        </form>
+    </div>
+{% endblock %}

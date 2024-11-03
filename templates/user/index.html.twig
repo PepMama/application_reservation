@@ -2,9 +2,13 @@
 
 {% block title %}Réserver un service{% endblock %}
 
+
+
 {% block content %}
     <div class="container card mt-5 mb-5">
         <h1 class="mb-4 mt-4">Entrez vos informations pour réserver</h1>
+
+        <p>Vous avez choisi le créneau : {{ startTime|date('H:i') }} - {{ endTime|date('H:i') }}</p>
 
         {{ form_start(form, {'attr': {'class': 'form'}}) }}
 
@@ -38,9 +42,14 @@
             {{ form_errors(form.email) }}
         </div>
 
-        <button type="submit" class="btn btn-success mb-4">Réserver</button>
-{#        <a href="{{ path('service_show') }}" class="btn btn-primary">Retour à la liste</a>#}
-
+        <div style="display: flex">
+            <div>
+                <button type="submit" class="btn btn-success mb-4">Réserver</button>
+            </div>
+            <div>
+                <a href="{{ path('service_show', { id: service.id }) }}" class="btn btn-secondary">Retour aux créneaux disponibles</a>
+            </div>
+        </div>
         {{ form_end(form) }}
     </div>
 {% endblock %}

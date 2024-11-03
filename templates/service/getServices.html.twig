@@ -3,6 +3,11 @@
 {% block title %}BookNow{% endblock %}
 
 {% block content %}
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
 
     <div class="container text-center mt-5">
         <div class="row">

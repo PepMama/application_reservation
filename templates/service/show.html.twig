@@ -4,7 +4,6 @@
 
 {% block content %}
     <div class="container mt-5">
-        {{ services.id }}
         <h1 class="display-5">{{ services.name }}</h1>
         <p>{{ services.description }}</p>
         <p>Prix : {{ services.price }} €</p>
@@ -27,7 +26,8 @@
                                     {% for slot in slots %}
                                         <li class="mb-2">
                                             {{ slot.startTime|date('H:i') }} - {{ slot.endTime|date('H:i') }}
-                                            <a href="{{ path('user_create', { id: services.id }) }}" class="btn btn-sm btn-success ms-2">Réserver</a>
+                                            <a href="{{ path('user_create', { id: services.id, startTime: slot.startTime|date('Y-m-d H:i:s'), endTime: slot.endTime|date('Y-m-d H:i:s') }) }}" class="btn btn-sm btn-success ms-2">Réserver</a>
+
                                         </li>
                                     {% endfor %}
                                 </ul>

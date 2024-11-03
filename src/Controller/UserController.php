@@ -14,46 +14,59 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends AbstractController
 {
-    #[Route('/user/new/{id}', name: 'user_create')]
-    public function create(int $id, Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/user/new/{id}/{startTime}/{endTime}', name: 'user_create')]
+    public function create(int $id, string $startTime, string $endTime, Request $request, EntityManagerInterface $entityManager): Response
     {
-        // Récupérer le service à réserver en fonction de l'ID passé en paramètre
         $service = $entityManager->getRepository(Services::class)->find($id);
         if (!$service) {
             throw $this->createNotFoundException("Service non trouvé.");
         }
 
-        // Créer un nouvel utilisateur et associer le formulaire
         $user = new User();
         $form = $this->createForm(UserFormType::class, $user);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            // Sauvegarder l'utilisateur dans la base de données
-            $entityManager->persist($user);
-            $entityManager->flush();
+            $existingUser = $entityManager->getRepository(User::class)->findOneBy([
+                'email' => $user->getEmail(),
+            ]);
 
-            // Créer une réservation pour ce service
+            if ($existingUser) {
+                $user = $existingUser;
+            } else {
+                $entityManager->persist($user);
+                $entityManager->flush();
+            }
+
+            // Créer une réservation pour ce service avec les heures de début et de fin spécifiques
             $booking = new Booking();
             $booking->setUser($user);
             $booking->setService($service);
-            $booking->setStartTime(new \DateTime()); // Définir l'heure de début
-            $booking->setEndTime((new \DateTime())->modify('+1 hour')); // Définir l'heure de fin
+
+            $startTimeObj = new \DateTime($startTime);
+            $endTimeObj = new \DateTime($endTime);
+            $dayOfWeek = (int) $startTimeObj->format('N');
+
+            $booking->setStartTime($startTimeObj);
+            $booking->setEndTime($endTimeObj);
+            $booking->setDayOfWeek($dayOfWeek);
             $booking->setReserved(true);
 
-            // Sauvegarder la réservation
             $entityManager->persist($booking);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Votre réservation a été confirmée !');
-
-            // Redirection après réservation
-            return $this->redirectToRoute('service_show', ['id' => $id]);
+            return $this->render('booking/confirm_reservation.html.twig', [
+                'user' => $user,
+                'service' => $service,
+                'booking' => $booking,
+            ]);
         }
 
         return $this->render('user/index.html.twig', [
             'form' => $form->createView(),
             'service' => $service,
+            'startTime' => $startTime,
+            'endTime' => $endTime,
         ]);
     }
 }
