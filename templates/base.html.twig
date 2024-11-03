@@ -27,9 +27,9 @@
                     Services proposés
                 </button>
                 <ul class="dropdown-menu">
-{#                    {% for service in services %}#}
-{#                        <li><a class="dropdown-item" href="{{ path('app_home', { id: service.id }) }}">{{ service.name }}</a></li>#}
-{#                    {% endfor %}#}
+                    {% for service in services %}
+                        <li><a class="dropdown-item" href="{{ path('service_show', { id: service.id }) }}">{{ service.name }}</a></li>
+                    {% endfor %}
                 </ul>
             </div>
         </ul>
