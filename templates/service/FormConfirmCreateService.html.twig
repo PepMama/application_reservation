@@ -1,0 +1,16 @@
+{# templates/service/vueFormService.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails du Service Créé{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h1>Service Créé avec Succès !</h1>
+        <p><strong>Nom du Service :</strong> {{ name }}</p>
+        <p><strong>Description :</strong> {{ description }}</p>
+        <p><strong>Prix :</strong> {{ price }} €</p>
+
+        <a href="{{ path('app_home') }}" class="btn btn-primary mt-4">Retour à la liste des services</a>
+    </div>
+{% endblock %}

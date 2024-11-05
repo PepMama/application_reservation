@@ -55,14 +55,14 @@ class UserController extends AbstractController
             $entityManager->persist($booking);
             $entityManager->flush();
 
-            return $this->render('booking/confirm_reservation.html.twig', [
+            return $this->render('booking/ConfirmReservation.html.twig', [
                 'user' => $user,
                 'service' => $service,
                 'booking' => $booking,
             ]);
         }
 
-        return $this->render('user/index.html.twig', [
+        return $this->render('user/FormUser.html.twig', [
             'form' => $form->createView(),
             'service' => $service,
             'startTime' => $startTime,

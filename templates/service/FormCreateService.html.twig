@@ -1,0 +1,35 @@
+{# templates/service/form.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un service{% endblock %}
+
+{% block content %}
+    <div class="container card mt-5 mb-5">
+        <h1 class="mb-4 mt-4">Entrez les informations pour la création du service souhaité</h1>
+
+        {{ form_start(form, {'attr': {'class': 'form'}}) }}
+
+        <div class="mb-3">
+            {{ form_label(form.name, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.name) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.description, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.description) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.price, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.price, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.price) }}
+        </div>
+
+        <button type="submit" class="btn btn-success mb-4">Ajouter le service</button>
+
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

@@ -15,7 +15,7 @@ class BookingCancelationController extends AbstractController
     #[Route('/cancelation', name: 'app_booking_cancelation')]
     public function index(): Response
     {
-        return $this->render('booking/cancelation.html.twig');
+        return $this->render('booking/Cancelation.html.twig');
     }
 
     #[Route('/cancelation/resultats', name: 'booking_cancel_results', methods: ['POST'])]
@@ -39,7 +39,7 @@ class BookingCancelationController extends AbstractController
             'isReserved' => true,
         ]);
 
-        return $this->render('booking/cancel_result.html.twig', [
+        return $this->render('booking/CancelResult.html.twig', [
             'bookings' => $bookings,
             'user' => $user,
         ]);

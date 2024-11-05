@@ -3,9 +3,11 @@ namespace App\Controller;
 
 use App\Entity\Services;
 use App\Entity\Booking;
+use App\Form\ServicesFormType;
 use App\Repository\ServicesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -15,12 +17,12 @@ class ServicesController extends AbstractController
     public function index(ServicesRepository $repository): Response
     {
         $services = $repository->findAll();
-        return $this->render('service/getServices.html.twig', [
+        return $this->render('service/DisplayListServices.html.twig', [
             'services' => $services,
         ]);
     }
 
-    #[Route('/services/{id}', name: 'service_show')]
+    #[Route('/services/{id}', name: 'service_show', requirements: ['id' => '\d+'])]
     public function show(int $id, ServicesRepository $servicesRepository, EntityManagerInterface $em): Response
     {
         $services = $servicesRepository->find($id);
@@ -31,9 +33,33 @@ class ServicesController extends AbstractController
 
         $timeSlots = $this->generateTimeSlots($services, $em);
 
-        return $this->render('service/show.html.twig', [
+        return $this->render('service/SlotAvailable.html.twig', [
             'services' => $services,
             'timeSlots' => $timeSlots,
+        ]);
+    }
+
+    #[Route('/services/create', name:'service_create')]
+    public function createService(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $service = new Services();
+        $form = $this->createForm(ServicesFormType::class, $service);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $entityManager->persist($service);
+            $entityManager->flush();
+
+            return $this->render('service/FormConfirmCreateService.html.twig', [
+                'name' => $service->getName(),
+                'description' => $service->getDescription(),
+                'price' => $service->getPrice(),
+            ]);
+        }
+
+       return $this->render('service/FormCreateService.html.twig', [
+            'form' => $form->createView(),
         ]);
     }
 
